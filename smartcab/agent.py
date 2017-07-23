@@ -39,8 +39,8 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-        # self.epsilon -= 0.025
-        a_const = 0.035
+        # self.epsilon -= 0.05
+        a_const = 0.01
         # self.epsilon = a_const**self.trial_number # log
         # self.epsilon = math.exp(-a_const*self.trial_number)
         self.epsilon = math.cos(a_const*self.trial_number) # inverse log
@@ -65,7 +65,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent
-        state = (waypoint, inputs['light'], inputs['oncoming'])
+        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
 
         return state
 
@@ -145,10 +145,8 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         if self.learning:
-            self.Q[state][action] += self.alpha * reward
-            # NOTE TO REVIEWER: I would have thought we want to look at the next_state, as below
-            # next_state = self.build_state()
-            # self.Q[state][action] += self.alpha * (reward + self.get_maxQ(next_state) - self.Q[state][action])
+            self.Q[state][action] += self.alpha * (reward - self.Q[state][action])
+
         return
 
 
